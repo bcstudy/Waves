@@ -37,8 +37,12 @@ object DBUtils {
 
       val activeNumber        = oldestActiveIdx.fold(0)(x => math.min(lastIdx - x + 1, maxOrders))
       val (finalized, active) = orders.partition(_._2.status.isFinal)
-      val activeEager         = active.take(activeNumber).force
-      val finalizedEager      = if (activeOnly) Stream.empty else finalized.take(maxOrders - activeEager.size).force
+      val activeEager         = active.take(activeNumber)
+      val finalizedEager      = if (activeOnly) Stream.empty else finalized.take(maxOrders - activeEager.size)
+
+//      println(
+//        s"Stats:\n${orders.mkString("\n")}\nactiveNumber: $activeNumber\nlastIdx: $lastIdx\noldestActiveIdx: $oldestActiveIdx\nactive:\n${activeEager
+//          .mkString("\n")}\n")
 
       val r = for {
         x     <- activeEager ++ finalizedEager

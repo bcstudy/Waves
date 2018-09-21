@@ -249,6 +249,8 @@ package object database {
 
     def get[A](key: Key[A]): A = key.parse(db.get(key.keyBytes))
 
+    def has[V](key: Key[V]): Boolean = db.get(key.keyBytes) != null
+
     def iterateOver(prefix: Short)(f: JMap.Entry[Array[Byte], Array[Byte]] => Unit): Unit =
       iterateOver(Shorts.toByteArray(prefix))(f)
 
